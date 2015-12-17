@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hitbox Checker (y)</title>
+<meta charset="utf-8">
+<style type="text/css">
+	#boundingBox {
+		width: 400px; height: 500px;
+		background-color: #ddd;
+		position: relative;
+		float: left; margin-right: 1em;
+	}
+</style>
+</head>
+<body>
+	<header>
+		<h1>Hitbox Checker (y)</h1>
+		<p>Checks for intersecting hits on the y-axis</p>
+	</header>
+	<article>
+		<div id="boundingBox"></div>
+		<p id="sysmsg"></p>
+	</article>
+</body>
+<script>
+var testArea = document.getElementById("boundingBox");
+var log = document.getElementById("sysmsg");
+
+function Box(x, y, colour) {
+	this.x = x;
+	this.y = y;
+	this.elem = document.createElement("div");
+	this.elem.style.width = "100px";
+	this.elem.style.height = "100px";
+	this.elem.style.backgroundColor = colour;
+	this.elem.style.position = "absolute";
+	this.elem.style.left = this.x + "px";
+	this.elem.style.top = this.y + "px";
+	testArea.appendChild(this.elem);
+}
+
+// notice that whichever element you declare first, will also be on top 
+var boxB = new Box(30, 200, "blue");
+var boxA = new Box(0, 0, "red");
+
+// the counter, a.k.a. the iterator
+var i = 0;
+
+function animate() {
+
+	// add iteration to the y-position of the box
+	boxA.y = i;
+
+	// update style with position
+	boxA.elem.style.top = boxA.y + "px";
+
+	/* 
+	We need to know for the following:
+	the y-position of boxA (boxA.y position)
+	plus its width (boxA.elem.offsetWidth as added to its y-position)
+	...and...
+	the y position of boxB (boxB.y position)
+	plus its width (boxB.elem.offsetWidth as added to its y-position)
+	...
+	When we know that, we can run a test of whether boxA and boxB intersect
+	*/
+
+	// check for hits on y-axis
+	if (boxA.y+boxA.elem.offsetHeight >= boxB.y && boxA.y <= boxB.y+boxB.elem.offsetHeight) {
+		log.innerHTML = "Hit!"
+	} else {
+		log.innerHTML = "";
+	}
+	
+	// once we know how to do this on the x and y-axis, it's easy to extrapolate this to both axis together
+
+	// but more on that in the next project ^^ hitbox checker (xy)
+
+	// run the animation only as long the animated object (boxA) is within the canvas box
+	if (boxA.y < testArea.offsetHeight-boxA.elem.offsetHeight) {
+		requestAnimationFrame(animate);
+		i++;
+	}
+
+
+}
+animate();
+
+</script>
+</html>
