@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hitbox Checker (xy)</title>
+<meta charset="utf-8">
+<style type="text/css">
+	#boundingBox {
+		width: 450px; height: 400px;
+		background-color: #ddd;
+		position: relative;
+		float: left; margin-right: 1em;
+	}
+</style>
+</head>
+<body>
+	<header>
+		<h1>Hitbox Checker (xy)</h1>
+		<p>Checks for intersecting hits on both the x and y-axis</p>
+	</header>
+	<article>
+		<div id="boundingBox"></div>
+		<p id="sysmsg"></p>
+	</article>
+</body>
+<script>
+var testArea = document.getElementById("boundingBox");
+var log = document.getElementById("sysmsg");
+
+function Box(x, y, colour) {
+	this.x = x;
+	this.y = y;
+	this.elem = document.createElement("div");
+	this.elem.style.width = "100px";
+	this.elem.style.height = "100px";
+	this.elem.style.backgroundColor = colour;
+	this.elem.style.position = "absolute";
+	this.elem.style.left = this.x + "px";
+	this.elem.style.top = this.y + "px";
+	testArea.appendChild(this.elem);
+}
+
+// notice that whichever element you declare first, will also be on top 
+var boxB = new Box(150, 150, "blue");
+var boxA = new Box(0, 0, "red");
+
+// console.log(boxB.elem.style);
+var i = 0;
+
+function animate() {
+
+	// add itteration to box position
+	boxA.x = i;
+	boxA.y = i/2;
+
+	// update style with position
+	boxA.elem.style.left = boxA.x + "px";
+	boxA.elem.style.top = boxA.y + "px";
+
+
+	// check for hits on the x and y-axis
+	if (	boxA.y+boxA.elem.offsetHeight >= boxB.y && 
+			boxA.y <= boxB.y+boxB.elem.offsetHeight &&
+			boxA.x+boxA.elem.offsetWidth >= boxB.x &&
+			boxA.x <= boxB.x+boxB.elem.offsetWidth) {
+		log.innerHTML = "Hit!"
+	} else {
+		log.innerHTML = "";
+	}
+	
+	// run the animation only as long the animated object (boxA) is within the canvas box
+	if (boxA.y < testArea.offsetHeight-boxA.elem.offsetHeight && boxA.x < testArea.offsetWidth-boxA.elem.offsetWidth) {
+		requestAnimationFrame(animate);
+		i++;
+	}
+
+
+}
+animate();
+
+</script>
+</html>
