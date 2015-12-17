@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hitbox Checker (x)</title>
+<meta charset="utf-8">
+<style type="text/css">
+	#boundingBox {
+		width: 500px; height: 400px;
+		background-color: #ddd;
+		position: relative;
+	}
+</style>
+</head>
+<body>
+	<header>
+		<h1>Hitbox Checker (x)</h1>
+		<p>Checks for intersecting hits on the x-axis</p>
+	</header>
+	<article>
+		<div id="boundingBox"></div>
+		<p id="sysmsg"></p>
+	</article>
+</body>
+<script>
+var testArea = document.getElementById("boundingBox");
+var log = document.getElementById("sysmsg");
+
+function Box(x, y, colour) {
+	this.x = x;
+	this.y = y;
+	this.elem = document.createElement("div");
+	this.elem.style.width = "100px";
+	this.elem.style.height = "100px";
+	this.elem.style.backgroundColor = colour;
+	this.elem.style.position = "absolute";
+	this.elem.style.left = this.x + "px";
+	this.elem.style.top = this.y + "px";
+	testArea.appendChild(this.elem);
+}
+
+// notice that whichever element you declare first, will also be on top 
+var boxB = new Box(200, 75, "blue");
+var boxA = new Box(0, 0, "red");
+
+// the counter, a.k.a. the iterator
+var i = 0;
+
+function animate() {
+
+	// add iteration to the x-position of the box
+	boxA.x = i;
+
+	// update style with position
+	boxA.elem.style.left = boxA.x + "px";
+
+	/* 
+	We need to know for the following:
+	the x-position of boxA (boxA.x position)
+	plus its width (boxA.elem.offsetWidth as added to its x-position)
+	...and...
+	the x position of boxB (boxB.x position)
+	plus its width (boxB.elem.offsetWidth as added to its x-position)
+	...
+	When we know that, we can run a test of whether boxA and boxB intersect
+	*/
+
+	// check for hits on x-axis
+	if (boxA.x+boxA.elem.offsetWidth >= boxB.x && boxA.x <= boxB.x+boxB.elem.offsetWidth) {
+		log.innerHTML = "Hit!"
+	} else {
+		log.innerHTML = "";
+	}
+	
+	// once we know how to do this on the x-axis, it's easy to extend this to also include the y-axis
+	// but more on that in the next project ^^ hitbox checker (xy)
+
+	// run the animation only as long the animated object (boxA) is within the canvas box
+	if (boxA.x < testArea.offsetWidth-boxA.elem.offsetWidth) {
+		requestAnimationFrame(animate);
+		i++;
+	}
+
+
+}
+animate();
+
+</script>
+</html>
